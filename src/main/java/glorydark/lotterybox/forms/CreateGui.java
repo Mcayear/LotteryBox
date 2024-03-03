@@ -14,10 +14,7 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBookEnchanted;
 import cn.nukkit.nbt.tag.ListTag;
 import glorydark.lotterybox.MainClass;
-import glorydark.lotterybox.tools.BasicTool;
-import glorydark.lotterybox.tools.Inventory;
-import glorydark.lotterybox.tools.LotteryBox;
-import glorydark.lotterybox.tools.Prize;
+import glorydark.lotterybox.tools.*;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -51,35 +48,9 @@ public class CreateGui {
         FormWindowSimple simple = new FormWindowSimple(MainClass.lang.getTranslation("ShowPossibilityWindow", "Title", box.getName()), "");
         StringBuilder builder = new StringBuilder();
         builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle", BasicTool.getLotteryPlayTimes(player.getName(), box.getName()))).append("\n").append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle_1", box.getName())).append("\n");
-        for (String string : box.getNeeds()) {
-            if (string.startsWith("ticket|")) {
-                String[] strings = string.replace("ticket|", "").split("@");
-                int hasCount = BasicTool.getTicketCounts(player.getName(), strings[0]);
-                if (hasCount >= Integer.parseInt(strings[1])) {
-                    builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "NeedTicket_Enough_Format", strings[0], strings[1], hasCount)).append("\n");
-                } else {
-                    builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "NeedTicket_NotEnough_Format", strings[0], strings[1], hasCount)).append("\n");
-                }
-            }
-            if (string.startsWith("item|")) {
-                String itemString = string.replace("item|", "");
-                Item item = Inventory.getItem(itemString);
-                if (item != null) {
-                    int count = 0;
-                    for (Item i : player.getInventory().getContents().values()) {
-                        if (i.equals(item, true)) {
-                            count += i.getCount();
-                        }
-                    }
-                    if (count >= item.getCount()) {
-                        builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "NeedItem_Enough_Format", item.getCustomName(), item.getCount(), count)).append("\n");
-                    } else {
-                        builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "NeedItem_NotEnough_Format", item.getCustomName(), item.getCount(), count)).append("\n");
-                    }
-                } else {
-                    builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "NeedItem_Enough_Format", "Unknown Item", "1", "0")).append("\n");
-                }
-            }
+
+        if (ExamineNeed.examineNeed(box.getNeeds().toArray(String[]::new), player)) {
+            //TODO: 显示需求字符串
         }
         builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle_2", box.getName())).append("\n");
         DecimalFormat format = new DecimalFormat("0.00%");

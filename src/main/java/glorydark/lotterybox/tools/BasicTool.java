@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BasicTool {
 
-    public static Boolean checkTicketCounts(String player, String ticket, Integer counts) {
+    public static boolean checkTicketCounts(String player, String ticket, Integer counts) {
         return new Config(MainClass.path + "/tickets/" + player + ".yml", Config.YAML).getInt(ticket, 0) >= counts;
     }
 
@@ -42,7 +42,7 @@ public class BasicTool {
         setLotteryPlayTimes(player, lotteryName, getLotteryPlayTimes(player, lotteryName) + delta);
     }
 
-    public static Boolean checkItemsExists(Player player, Item[] needItems) {
+    public static boolean checkItemsExists(Player player, Item[] needItems) {
         for (Item needItem : needItems) {
             int counts = 0;
             for (Item hasItem : player.getInventory().getContents().values()) {
@@ -57,7 +57,7 @@ public class BasicTool {
         return true;
     }
 
-    public static Boolean checkItemExists(Player player, Item needItem, Integer spins) {
+    public static boolean checkItemExists(Player player, Item needItem, Integer spins) {
         int counts = 0;
         for (Item hasItem : player.getInventory().getContents().values()) {
             if (hasItem.equals(needItem, false)) {

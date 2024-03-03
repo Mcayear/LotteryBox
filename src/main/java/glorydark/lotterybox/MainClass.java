@@ -4,6 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.entity.item.EntityMinecartChest;
 import cn.nukkit.item.Item;
+import cn.nukkit.lang.PluginI18n;
+import cn.nukkit.lang.PluginI18nManager;
 import cn.nukkit.level.Sound;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
@@ -11,10 +13,12 @@ import com.smallaswater.npc.data.RsNpcConfig;
 import com.smallaswater.npc.variable.BaseVariableV2;
 import com.smallaswater.npc.variable.VariableManage;
 import glorydark.lotterybox.commands.MainCommand;
+import glorydark.lotterybox.config.McrmbConfig;
 import glorydark.lotterybox.forms.GuiListener;
 import glorydark.lotterybox.languages.Lang;
 import glorydark.lotterybox.listeners.EventListeners;
 import glorydark.lotterybox.tools.*;
+import lombok.Getter;
 import tip.utils.Api;
 import tip.utils.variables.BaseVariable;
 import tip.utils.variables.VariableManager;
@@ -24,14 +28,17 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class MainClass extends PluginBase {
-
     public static String path = "";
 
     public static Lang lang;
 
     public static List<LotteryBox> lotteryBoxList = new ArrayList<>();
 
+    @Getter
     public static MainClass instance;
+
+    @Getter
+    public static PluginI18n i18n;
 
     public static HashMap<Player, EntityMinecartChest> chestList = new HashMap<>();
 
@@ -113,6 +120,9 @@ public class MainClass extends PluginBase {
 
     @Override
     public void onLoad() {
+        //save Plugin Instance
+        instance = this;
+        i18n = PluginI18nManager.register(this);
         this.getLogger().info("LotteryBox onLoad!");
     }
 
@@ -126,7 +136,6 @@ public class MainClass extends PluginBase {
         this.saveResource("languages/zh-cn.yml", false);
         this.saveResource("rarity.yml", false);
         path = this.getDataFolder().getPath();
-        instance = this;
         Config config = new Config(path + "/config.yml", Config.YAML);
         if (config.getInt("version", 0) != 2022082002) {
             updateConfig();
@@ -173,6 +182,9 @@ public class MainClass extends PluginBase {
             this.getLogger().info(MainClass.lang.getTranslation("Tips", "DependencyFound", "RsNPC"));
             VariableManage.addVariableV2("LotteryBox", LotteryBoxRsNPCVariable.class);
         }
+
+        McrmbConfig.init();
+
         this.getLogger().info("LotteryBox onEnabled!");
     }
 

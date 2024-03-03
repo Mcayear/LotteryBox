@@ -5,7 +5,4 @@ author: glorydark
 api: ["1.0.0"]
 description: LotteryBox
 load: POSTWORLD
-softdepend:
-  - Tips
-  - EconomyAPI
-  - RsNPC
+softdepend: ["Tips", "RsNPC", "MagicItem", "RcRPG", "EconomyAPI", "PlayerPoints"]

@@ -13,16 +13,16 @@ public class Prize {
     private String name;
     private String description;
     private Item displayitem;
-    private Boolean broadcast;
+    private boolean broadcast;
     private Item[] items;
     private List<String> consolecommands;
     private Integer possibility;
 
-    private Boolean showOriginName;
+    private boolean showOriginName;
 
     private String rarity;
 
-    public Prize(String name, String description, Item displayItem, Boolean broadcast, Item[] items, List<String> consolecommands, Integer possibility, Boolean showOriginName, String rarity) {
+    public Prize(String name, String description, Item displayItem, boolean broadcast, Item[] items, List<String> consolecommands, Integer possibility, boolean showOriginName, String rarity) {
         this.name = name;
         this.description = description;
         this.displayitem = displayItem;

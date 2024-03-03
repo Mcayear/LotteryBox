@@ -155,7 +155,7 @@ public class EventListeners implements Listener {
         }
     }
 
-    public void startLottery(Player player, Boolean isTenSpins) {
+    public void startLottery(Player player, boolean isTenSpins) {
         LotteryBox lotteryBox = MainClass.playerLotteryBoxes.get(player);
         int spin = 1;
         if (isTenSpins) {

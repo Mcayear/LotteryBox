@@ -9,8 +9,8 @@
     <version>1.0.7-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.sourceEncoding>UTF-8</maven.compiler.sourceEncoding>
     </properties>
 
@@ -44,8 +44,8 @@
     <dependencies>
         <dependency>
             <groupId>cn.nukkit</groupId>
-            <artifactId>nukkit</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>Nukkit</artifactId>
+            <version>MOT-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -76,20 +76,33 @@
             <version>2.0.2</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.player.PlayerPoint</groupId>
+            <artifactId>PlayerPoints</artifactId>
+            <version>2.0.2</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/PlayerPoints-1.3.0-SNAPSHOT.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.ankele.plugin.MagicItem</groupId>
+            <artifactId>MagicItem</artifactId>
+            <version>1.1.0</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/MagicItem-1.1.0.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>RcRPG.Main</groupId>
+            <artifactId>RcRPG</artifactId>
+            <version>1.0.4-MOT</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/lib/RcRPG-1.0.4-MOT.jar</systemPath>
+        </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
-                    <encoding>${maven.compiler.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
+
+
 </project>
