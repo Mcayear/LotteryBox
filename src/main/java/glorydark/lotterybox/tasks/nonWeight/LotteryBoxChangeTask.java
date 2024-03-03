@@ -121,7 +121,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
                 item.addEnchantment(new EnchantmentProtectionAll());
                 chest.getInventory().setItem(realIndex, item);
                 lotteryBox.showEndParticle(player);
-                if (lotteryBox.getSpawnFirework()) {
+                if (lotteryBox.isSpawnFirework()) {
                     CreateFireworkApi.spawnFirework(player.getPosition(), DyeColor.YELLOW, ItemFirework.FireworkExplosion.ExplosionType.BURST);
                 }
                 if (!item.getCustomName().equals(MainClass.lang.getTranslation("PlayLotteryWindow", "BlockAir")) && prize != null) {
@@ -130,7 +130,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
                     for (String s : prize.getConsolecommands()) {
                         Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), s.replace("%player%", player.getName()));
                     }
-                    if (prize.getBroadcast()) {
+                    if (prize.isBroadcast()) {
                         Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast").replaceFirst("%s", player.getName()).replaceFirst("%s1", prize.getName()));
                     }
                 } else {
@@ -171,7 +171,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
                     for (String s : prize.getConsolecommands()) {
                         saveCommand(s);
                     }
-                    if (prize.getBroadcast()) {
+                    if (prize.isBroadcast()) {
                         Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast").replaceFirst("%s", player.getName()).replaceFirst("%s1", prize.getName()));
                     }
                 } else {

@@ -28,8 +28,7 @@ public class PointCoupon {
     }
     public static boolean toPay(String playerName, int money, String reason) throws CodeException {
         Player player = Server.getInstance().getPlayer(playerName);
-        ConfigSection section = null;
-        section = send("Pay", md5Value(playerName,
+        ConfigSection section = send("Pay", md5Value(playerName,
                 new GetValue("use", URLEncoder.encode(reason, StandardCharsets.UTF_8)),
                 new GetValue("money", money + ""),
                 new GetValue("time", String.valueOf(System.currentTimeMillis() / 1000L))));

@@ -91,7 +91,7 @@ public class InventoryChangeTask extends Task implements Runnable {
         if (index == (index / 2) * 2) {
             Prize prize = lotteryBox.getPrizes().get((index % maxCounts) / 2);
             Item item = prize.getDisplayitem().clone();
-            if (prize.getShowOriginName()) {
+            if (prize.isShowOriginName()) {
                 item.setCustomName(prize.getName());
             }
             if (isEnchanted) {
@@ -179,7 +179,7 @@ public class InventoryChangeTask extends Task implements Runnable {
                 for (int index : maxIndex) {
                     Prize prize = getPrize(index);
                     lotteryBox.showEndParticle(player);
-                    if (lotteryBox.getSpawnFirework()) {
+                    if (lotteryBox.isSpawnFirework()) {
                         CreateFireworkApi.spawnFirework(player.getPosition(), DyeColor.YELLOW, ItemFirework.FireworkExplosion.ExplosionType.BURST);
                     }
                     if (prize != null) {
@@ -189,7 +189,7 @@ public class InventoryChangeTask extends Task implements Runnable {
                         for (String s : prize.getConsolecommands()) {
                             Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), s.replace("%player%", player.getName()));
                         }
-                        if (prize.getBroadcast()) {
+                        if (prize.isBroadcast()) {
                             Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
                         }
                     } else {
@@ -222,7 +222,7 @@ public class InventoryChangeTask extends Task implements Runnable {
                     for (String s : prize.getConsolecommands()) {
                         saveCommand(s);
                     }
-                    if (prize.getBroadcast()) {
+                    if (prize.isBroadcast()) {
                         Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
                     }
                 }

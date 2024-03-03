@@ -48,10 +48,7 @@ public class CreateGui {
         FormWindowSimple simple = new FormWindowSimple(MainClass.lang.getTranslation("ShowPossibilityWindow", "Title", box.getName()), "");
         StringBuilder builder = new StringBuilder();
         builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle", BasicTool.getLotteryPlayTimes(player.getName(), box.getName()))).append("\n").append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle_1", box.getName())).append("\n");
-
-        if (ExamineNeed.examineNeed(box.getNeeds().toArray(String[]::new), player)) {
-            //TODO: 显示需求字符串
-        }
+        builder.append(ExamineNeed.stringNeed(box.getNeeds().toArray(String[]::new)));
         builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle_2", box.getName())).append("\n");
         DecimalFormat format = new DecimalFormat("0.00%");
         if (box.isWeightEnabled()) {
@@ -94,7 +91,7 @@ public class CreateGui {
             if (!prize.getDescription().equals("")) {
                 place.setLore(prize.getDescription());
             }
-            if (!prize.getShowOriginName()) {
+            if (!prize.isShowOriginName()) {
                 place.setCustomName(prize.getName());
             }
             place.setNamedTag(place.getNamedTag().remove("ench"));

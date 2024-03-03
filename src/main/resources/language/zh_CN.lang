@@ -1,0 +1,3 @@
+lotterybox.need_failed_msg=需满足：{%0}
+
+lotterybox.cannot.point=§c点券余额不足，请充值。{n}唯一赞助地址： {%0}

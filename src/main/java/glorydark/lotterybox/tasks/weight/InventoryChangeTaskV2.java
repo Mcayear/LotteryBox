@@ -170,7 +170,7 @@ public class InventoryChangeTaskV2 extends Task implements Runnable {
                 for (int index : maxIndex) {
                     Prize prize = getPrizeByIndex(index);
                     lotteryBox.showEndParticle(player);
-                    if (lotteryBox.getSpawnFirework()) {
+                    if (lotteryBox.isSpawnFirework()) {
                         CreateFireworkApi.spawnFirework(player.getPosition(), DyeColor.YELLOW, ItemFirework.FireworkExplosion.ExplosionType.BURST);
                     }
                     if (prize != null) {
@@ -180,7 +180,7 @@ public class InventoryChangeTaskV2 extends Task implements Runnable {
                         for (String s : prize.getConsolecommands()) {
                             Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), s.replace("%player%", player.getName()));
                         }
-                        if (prize.getBroadcast()) {
+                        if (prize.isBroadcast()) {
                             Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
                         }
                     } else {
@@ -213,7 +213,7 @@ public class InventoryChangeTaskV2 extends Task implements Runnable {
                     for (String s : prize.getConsolecommands()) {
                         saveCommand(s);
                     }
-                    if (prize.getBroadcast()) {
+                    if (prize.isBroadcast()) {
                         Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
                     }
                 }
