@@ -9,9 +9,10 @@ import cn.nukkit.item.enchantment.protection.EnchantmentProtectionAll;
 import cn.nukkit.scheduler.Task;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.DyeColor;
-import glorydark.lotterybox.MainClass;
+import glorydark.lotterybox.LotteryBoxMain;
+import glorydark.lotterybox.api.LotteryBoxAPI;
 import glorydark.lotterybox.api.CreateFireworkApi;
-import glorydark.lotterybox.forms.CreateGui;
+import glorydark.lotterybox.forms.FormFactory;
 import glorydark.lotterybox.tools.*;
 
 import java.util.ArrayList;
@@ -31,25 +32,25 @@ public class InventoryChangeTask extends Task implements Runnable {
     private int ticks;
 
     public InventoryChangeTask(Player player, LotteryBox box, Integer spins) {
-        this.inventory = player.getInventory().getContents();
         this.player = player;
         this.lotteryBox = box;
         this.maxSpin = spins;
         this.maxCounts = lotteryBox.getPrizes().size() * 2;
         for (int i = 0; i < spins; i++) {
-            BasicTool.changeLotteryPlayTimes(player.getName(), lotteryBox.getName(), 1);
-            if (lotteryBox.getBonus(BasicTool.getLotteryPlayTimes(player.getName(), lotteryBox.getName())) != null) {
-                Bonus bonus = lotteryBox.getBonus(BasicTool.getLotteryPlayTimes(player.getName(), lotteryBox.getName()));
+            LotteryBoxAPI.changeLotteryPlayTimes(player.getName(), lotteryBox.getName(), 1);
+            if (lotteryBox.getBonus(LotteryBoxAPI.getLotteryPlayTimes(player.getName(), lotteryBox.getName())) != null) {
+                Bonus bonus = lotteryBox.getBonus(LotteryBoxAPI.getLotteryPlayTimes(player.getName(), lotteryBox.getName()));
                 for (String s : bonus.getConsolecommands()) {
                     Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), s.replace("%player%", player.getName()));
                 }
                 player.getInventory().addItem(bonus.getItems());
-                Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "BonusBroadcast", player.getName(), lotteryBox.getName(), bonus.getNeedTimes(), bonus.getName()));
-            }
+                Server.getInstance().broadcastMessage(LotteryBoxMain.lang.getTranslation("Tips", "BonusBroadcast", player.getName(), lotteryBox.getName(), bonus.getNeedTimes(), bonus.getName()));
+                LotteryBoxMain.log.info("玩家 {" + player.getName() + "} 在抽奖箱 {" + lotteryBox.getName() + "} 中抽奖达到 {" + bonus.getNeedTimes() + "} 次，获得物品 {" + bonus.getName() + "}!");}
             int get = getObtained();
             this.maxIndex.add(maxCounts + get);
             //player.sendMessage((get) + (getPrize(get)==null? "无奖": "有奖"));
         }
+        this.inventory = player.getInventory().getContents();
         player.getInventory().clearAll();
         player.getInventory().setHeldItemIndex(4);
         player.getInventory().setItem(0, getDisplayItem(index - 4, false));
@@ -61,7 +62,7 @@ public class InventoryChangeTask extends Task implements Runnable {
         player.getInventory().setItem(6, getDisplayItem(index + 2, false));
         player.getInventory().setItem(7, getDisplayItem(index + 3, false));
         player.getInventory().setItem(8, getDisplayItem(index + 4, false));
-        MainClass.playingPlayers.add(player);
+        LotteryBoxMain.playingPlayers.add(player);
     }
 
     public Integer getObtained() {
@@ -100,7 +101,7 @@ public class InventoryChangeTask extends Task implements Runnable {
             return item;
         } else {
             Item item = new BlockGlassStained().toItem();
-            item.setCustomName(MainClass.lang.getTranslation("PlayLotteryWindow", "BlockAir"));
+            item.setCustomName(LotteryBoxMain.lang.getTranslation("PlayLotteryWindow", "BlockAir"));
             if (isEnchanted) {
                 item.addEnchantment(new EnchantmentProtectionAll());
             }
@@ -110,7 +111,7 @@ public class InventoryChangeTask extends Task implements Runnable {
 
     @Override
     public void onRun(int i) {
-        if (player.isOnline() && !MainClass.banWorlds.contains(player.getLevel().getName()) && MainClass.isWorldAvailable(player.getLevel().getName()) && MainClass.playingPlayers.contains(player)) {
+        if (player.isOnline() && !LotteryBoxMain.banWorlds.contains(player.getLevel().getName()) && LotteryBoxMain.isWorldAvailable(player.getLevel().getName()) && LotteryBoxMain.playingPlayers.contains(player)) {
             Integer thisMaxIndex = maxIndex.get(0);
             ticks += 1;
             if (maxCounts > 10) {
@@ -140,27 +141,27 @@ public class InventoryChangeTask extends Task implements Runnable {
                 Prize prize = getPrize(index);
                 if (prize != null) {
                     lotteryBox.addBlockParticle(player, getPrize(index));
-                    switch (MainClass.showType) {
+                    switch (LotteryBoxMain.showType) {
                         case "actionbar":
-                            player.sendActionBar(MainClass.lang.getTranslation("Tips", "PrizeShow", prize.getName()));
+                            player.sendActionBar(LotteryBoxMain.lang.getTranslation("Tips", "PrizeShow", prize.getName()));
                             break;
                         case "tip":
-                            player.sendTip(MainClass.lang.getTranslation("Tips", "PrizeShow", prize.getName()));
+                            player.sendTip(LotteryBoxMain.lang.getTranslation("Tips", "PrizeShow", prize.getName()));
                             break;
                         case "popup":
-                            player.sendPopup(MainClass.lang.getTranslation("Tips", "PrizeShow", prize.getName()));
+                            player.sendPopup(LotteryBoxMain.lang.getTranslation("Tips", "PrizeShow", prize.getName()));
                             break;
                     }
                 } else {
-                    switch (MainClass.showType) {
+                    switch (LotteryBoxMain.showType) {
                         case "actionbar":
-                            player.sendActionBar(MainClass.lang.getTranslation("Tips", "PrizeShow", MainClass.lang.getTranslation("PlayLotteryWindow", "BlockAir")));
+                            player.sendActionBar(LotteryBoxMain.lang.getTranslation("Tips", "PrizeShow", LotteryBoxMain.lang.getTranslation("PlayLotteryWindow", "BlockAir")));
                             break;
                         case "tip":
-                            player.sendTip(MainClass.lang.getTranslation("Tips", "PrizeShow", MainClass.lang.getTranslation("PlayLotteryWindow", "BlockAir")));
+                            player.sendTip(LotteryBoxMain.lang.getTranslation("Tips", "PrizeShow", LotteryBoxMain.lang.getTranslation("PlayLotteryWindow", "BlockAir")));
                             break;
                         case "popup":
-                            player.sendPopup(MainClass.lang.getTranslation("Tips", "PrizeShow", MainClass.lang.getTranslation("PlayLotteryWindow", "BlockAir")));
+                            player.sendPopup(LotteryBoxMain.lang.getTranslation("Tips", "PrizeShow", LotteryBoxMain.lang.getTranslation("PlayLotteryWindow", "BlockAir")));
                             break;
                     }
                 }
@@ -175,7 +176,7 @@ public class InventoryChangeTask extends Task implements Runnable {
                         count += 1;
                     }
                 }
-                StringBuilder content = new StringBuilder(MainClass.lang.getTranslation("RewardWindow", "Title") + "\n" + MainClass.lang.getTranslation("RewardWindow", "StartText", count));
+                StringBuilder content = new StringBuilder(LotteryBoxMain.lang.getTranslation("RewardWindow", "StartText", count));
                 for (int index : maxIndex) {
                     Prize prize = getPrize(index);
                     lotteryBox.showEndParticle(player);
@@ -183,40 +184,40 @@ public class InventoryChangeTask extends Task implements Runnable {
                         CreateFireworkApi.spawnFirework(player.getPosition(), DyeColor.YELLOW, ItemFirework.FireworkExplosion.ExplosionType.BURST);
                     }
                     if (prize != null) {
-                        content.append("\n").append(MainClass.lang.getTranslation("RewardWindow", "PrizeText", prize.getRarity(), prize.getName()));
+                        content.append("\n").append(LotteryBoxMain.lang.getTranslation("RewardWindow", "PrizeText", prize.getRarity(), prize.getName(), prize.getDescription()));
                         player.getInventory().addItem(prize.getItems());
-                        player.sendMessage(MainClass.lang.getTranslation("Tips", "DrawEndWithPrize", prize.getName()));
+                        player.sendMessage(LotteryBoxMain.lang.getTranslation("Tips", "DrawEndWithPrize", prize.getName()));
                         for (String s : prize.getConsolecommands()) {
                             Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), s.replace("%player%", player.getName()));
                         }
                         if (prize.isBroadcast()) {
                             Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
                         }
+                        LotteryBoxMain.log.info("玩家 {" + player.getName() + "} 在抽奖箱 {" + lotteryBox.getName() + "} 中抽到物品 {" + prize.getName() + "}!");
                     } else {
                         if (maxSpin == 1) {
-                            player.sendMessage(MainClass.lang.getTranslation("Tips", "DrawEndWithoutPrize"));
+                            player.sendMessage(LotteryBoxMain.lang.getTranslation("Tips", "DrawEndWithoutPrize"));
                         }
                     }
                 }
-                if (content.toString().equals(MainClass.lang.getTranslation("RewardWindow", "Title") + "\n" + MainClass.lang.getTranslation("RewardWindow", "StartText"))) {
-                    content.append("\n").append(MainClass.lang.getTranslation("RewardWindow", "PrizeNone"));
-                    CreateGui.showRewardWindow(player, content.toString());
+                if (content.toString().equals(LotteryBoxMain.lang.getTranslation("RewardWindow", "StartText", count))) {
+                    FormFactory.showRewardWindow(player, LotteryBoxMain.lang.getTranslation("RewardWindow", "PrizeNone"));
                 } else {
-                    CreateGui.showRewardWindow(player, content.toString());
+                    FormFactory.showRewardWindow(player, content.toString());
                 }
-                MainClass.playingPlayers.remove(player);
-                MainClass.playerLotteryBoxes.remove(player);
+                LotteryBoxMain.playingPlayers.remove(player);
+                LotteryBoxMain.playerLotteryBoxes.remove(player);
                 this.cancel();
             }
         } else {
             for (Integer index : maxIndex) {
                 Prize prize = getPrize(index);
                 if (prize != null) {
-                    if (player.isOnline() && MainClass.playingPlayers.contains(player)) {
-                        player.sendMessage(MainClass.lang.getTranslation("Tips", "DrawEndWithPrize", prize.getName()));
+                    if (player.isOnline() && LotteryBoxMain.playingPlayers.contains(player)) {
+                        player.sendMessage(LotteryBoxMain.lang.getTranslation("Tips", "DrawEndWithPrize", prize.getName()));
                         player.getInventory().addItem(prize.getItems());
                     } else {
-                        saveMessage(MainClass.lang.getTranslation("Tips", "DrawEndWithPrize", prize.getName()));
+                        saveMessage(LotteryBoxMain.lang.getTranslation("Tips", "DrawEndWithPrize", prize.getName()));
                         saveItem(prize.getItems());
                     }
                     for (String s : prize.getConsolecommands()) {
@@ -225,21 +226,22 @@ public class InventoryChangeTask extends Task implements Runnable {
                     if (prize.isBroadcast()) {
                         Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
                     }
+                    LotteryBoxMain.log.info("玩家 {" + player.getName() + "} 在抽奖箱 {" + lotteryBox.getName() + "} 中抽到物品 {" + prize.getName() + "}!");
                 }
                 saveItem(inventory.values().toArray(new Item[0]));
             }
-            MainClass.playerLotteryBoxes.remove(player);
-            MainClass.playingPlayers.remove(player);
-            MainClass.instance.getLogger().warning("Detect [" + player.getName() + "] exit the server, server will retry to give it in his or her next join");
+            LotteryBoxMain.playerLotteryBoxes.remove(player);
+            LotteryBoxMain.playingPlayers.remove(player);
+            LotteryBoxMain.instance.getLogger().warning("Detect [" + player.getName() + "] exit the server, server will retry to give it in his or her next join");
             this.cancel();
         }
     }
 
     private void saveItem(Item[] items) {
-        if (!MainClass.save_bag_enabled) {
+        if (!LotteryBoxMain.save_bag_enabled) {
             return;
         }
-        Config config = new Config(MainClass.path + "/cache.yml", Config.YAML);
+        Config config = new Config(LotteryBoxMain.path + "/cache.yml", Config.YAML);
 
         List<String> stringList = new ArrayList<>(config.getStringList(player.getName() + ".items"));
         for (Item item : items) {
@@ -250,7 +252,7 @@ public class InventoryChangeTask extends Task implements Runnable {
     }
 
     private void saveCommand(String command) {
-        Config config = new Config(MainClass.path + "/cache.yml", Config.YAML);
+        Config config = new Config(LotteryBoxMain.path + "/cache.yml", Config.YAML);
 
         List<String> stringList = new ArrayList<>(config.getStringList(player.getName() + ".commands"));
         stringList.add(command);
@@ -259,7 +261,7 @@ public class InventoryChangeTask extends Task implements Runnable {
     }
 
     private void saveMessage(String message) {
-        Config config = new Config(MainClass.path + "/cache.yml", Config.YAML);
+        Config config = new Config(LotteryBoxMain.path + "/cache.yml", Config.YAML);
 
         List<String> stringList = new ArrayList<>(config.getStringList(player.getName() + ".messages"));
         stringList.add(message);

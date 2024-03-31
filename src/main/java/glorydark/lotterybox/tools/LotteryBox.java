@@ -6,7 +6,9 @@ import cn.nukkit.item.Item;
 import cn.nukkit.level.Sound;
 import cn.nukkit.level.particle.*;
 import cn.nukkit.math.Vector3;
-import glorydark.lotterybox.MainClass;
+import glorydark.lotterybox.LotteryBoxMain;
+import glorydark.lotterybox.api.LotteryBoxAPI;
+import glorydark.lotterybox.forms.FormFactory;
 import lombok.Data;
 import me.onebone.economyapi.EconomyAPI;
 
@@ -61,7 +63,7 @@ public class LotteryBox {
     }
 
     public boolean checkLimit(String player, Integer spins) {
-        return BasicTool.getLotteryPlayTimes(player, name) + spins <= limit;
+        return LotteryBoxAPI.getLotteryPlayTimes(player, name) + spins <= limit;
     }
 
     /**
@@ -95,7 +97,7 @@ public class LotteryBox {
     }
 
     public void addBlockParticle(Player player, Prize prize) {
-        Rarity rarity = MainClass.rarities.getOrDefault(prize.getRarity(), null);
+        Rarity rarity = LotteryBoxMain.rarities.getOrDefault(prize.getRarity(), null);
         if (rarity == null) {
             return;
         }

@@ -12,22 +12,27 @@ import cn.nukkit.utils.Config;
 import com.smallaswater.npc.data.RsNpcConfig;
 import com.smallaswater.npc.variable.BaseVariableV2;
 import com.smallaswater.npc.variable.VariableManage;
+import glorydark.lotterybox.api.LotteryBoxAPI;
 import glorydark.lotterybox.commands.MainCommand;
 import glorydark.lotterybox.config.McrmbConfig;
-import glorydark.lotterybox.forms.GuiListener;
+import glorydark.lotterybox.forms.FormListener;
 import glorydark.lotterybox.languages.Lang;
 import glorydark.lotterybox.listeners.EventListeners;
+import glorydark.lotterybox.logger.LoggerFormatter;
 import glorydark.lotterybox.tools.*;
 import lombok.Getter;
 import tip.utils.Api;
 import tip.utils.variables.BaseVariable;
-import tip.utils.variables.VariableManager;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Supplier;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
-public class MainClass extends PluginBase {
+public class LotteryBoxMain extends PluginBase {
+
     public static String path = "";
 
     public static Lang lang;
@@ -35,7 +40,7 @@ public class MainClass extends PluginBase {
     public static List<LotteryBox> lotteryBoxList = new ArrayList<>();
 
     @Getter
-    public static MainClass instance;
+    public static LotteryBoxMain instance;
 
     @Getter
     public static PluginI18n i18n;
@@ -71,6 +76,8 @@ public class MainClass extends PluginBase {
     public static LinkedHashMap<String, Double> ticketPrice = new LinkedHashMap<>();
 
     public static boolean economyAPIEnabled;
+
+    public static Logger log;
 
     public static boolean isWorldAvailable(String level) {
         for (String prefix : banWorldPrefix) {
@@ -112,9 +119,9 @@ public class MainClass extends PluginBase {
                 }
                 LotteryBox lotteryBox = new LotteryBox(file.getName().split("\\.")[0], config.getString("displayName"), config.getStringList("needs"), config.getStringList("descriptions"), prizes, bonuses, config.getInt("permanentLimit"), config.getBoolean("spawnFirework"), config.getString("endParticle"), config.getString("sound", Sound.RANDOM_ORB.getSound()), config.getBoolean("weightEnabled", false));
                 lotteryBoxList.add(lotteryBox);
-                Server.getInstance().getLogger().info(MainClass.lang.getTranslation("Tips", "LotteryBoxLoaded", lotteryBox.getName()));
+                Server.getInstance().getLogger().info(LotteryBoxMain.lang.getTranslation("Tips", "LotteryBoxLoaded", lotteryBox.getName()));
             }
-            Server.getInstance().getLogger().info(MainClass.lang.getTranslation("Tips", "LotteryBoxFinish", lotteryBoxList.size()));
+            Server.getInstance().getLogger().info(LotteryBoxMain.lang.getTranslation("Tips", "LotteryBoxFinish", lotteryBoxList.size()));
         }
     }
 
@@ -135,7 +142,23 @@ public class MainClass extends PluginBase {
         new File(path + "/tickets/").mkdirs();
         this.saveResource("languages/zh-cn.yml", false);
         this.saveResource("rarity.yml", false);
+
         path = this.getDataFolder().getPath();
+        instance = this;
+        // log开始
+        log = Logger.getLogger("LotteryBox_" + UUID.randomUUID());
+        new File(path + "/logs/").mkdirs();
+
+        FileHandler fileHandler;
+        try {
+            fileHandler = new FileHandler(path + "/logs/" + getDate(System.currentTimeMillis()) + ".log");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        fileHandler.setFormatter(new LoggerFormatter());
+        log.addHandler(fileHandler);
+        // log结束
+
         Config config = new Config(path + "/config.yml", Config.YAML);
         if (config.getInt("version", 0) != 2022082002) {
             updateConfig();
@@ -160,9 +183,9 @@ public class MainClass extends PluginBase {
         lang = new Lang(new File(this.getDataFolder() + "/languages/" + language + ".yml"));
         economyAPIEnabled = Server.getInstance().getPluginManager().getPlugin("EconomyAPI") != null;
         if (economyAPIEnabled) {
-            this.getLogger().info(MainClass.lang.getTranslation("Tips", "DependencyFound", "EconomyAPI"));
+            this.getLogger().info(LotteryBoxMain.lang.getTranslation("Tips", "DependencyFound", "EconomyAPI"));
         } else {
-            this.getLogger().error(MainClass.lang.getTranslation("Tips", "DependencyMissing", "EconomyAPI"));
+            this.getLogger().error(LotteryBoxMain.lang.getTranslation("Tips", "DependencyMissing", "EconomyAPI"));
         }
         //this.getServer().getCommandMap().register("", new TestCommand("test"));
         this.getServer().getCommandMap().register("", new MainCommand("lotterybox"));
@@ -172,20 +195,26 @@ public class MainClass extends PluginBase {
         }
         loadBoxesConfig();
         this.getServer().getPluginManager().registerEvents(new EventListeners(), this);
-        this.getServer().getPluginManager().registerEvents(new GuiListener(), this);
+        this.getServer().getPluginManager().registerEvents(new FormListener(), this);
         if (this.getServer().getPluginManager().getPlugin("Tips") != null) {
-            this.getLogger().info(MainClass.lang.getTranslation("Tips", "DependencyFound", "Tips"));
+            this.getLogger().info(LotteryBoxMain.lang.getTranslation("Tips", "DependencyFound", "Tips"));
             Api.registerVariables("LotteryBox", LotteryBoxTipsVariable.class);
         }
 
         if (this.getServer().getPluginManager().getPlugin("RsNPC") != null) {
-            this.getLogger().info(MainClass.lang.getTranslation("Tips", "DependencyFound", "RsNPC"));
+            this.getLogger().info(LotteryBoxMain.lang.getTranslation("Tips", "DependencyFound", "RsNPC"));
             VariableManage.addVariableV2("LotteryBox", LotteryBoxRsNPCVariable.class);
         }
 
         McrmbConfig.init();
 
         this.getLogger().info("LotteryBox onEnabled!");
+    }
+
+    public static String getDate(long millis) {
+        Date date = new Date(millis);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+        return format.format(date);
     }
 
     public void updateConfig() {
@@ -215,10 +244,10 @@ public class MainClass extends PluginBase {
         @Override
         public void strReplace() {
             for (String ticket : registered_tickets) {
-                this.addStrReplaceString("{lotterybox_tickets_" + ticket + "}", String.valueOf(BasicTool.getTicketCounts(player.getName(), ticket)));
+                this.addStrReplaceString("{lotterybox_tickets_" + ticket + "}", String.valueOf(LotteryBoxAPI.getTicketCounts(player.getName(), ticket)));
             }
             for (LotteryBox box : lotteryBoxList) {
-                this.addStrReplaceString("{lotterybox_playtimes_" + box.getName() + "}", String.valueOf(BasicTool.getLotteryPlayTimes(player.getName(), box.getName())));
+                this.addStrReplaceString("{lotterybox_playtimes_" + box.getName() + "}", String.valueOf(LotteryBoxAPI.getLotteryPlayTimes(player.getName(), box.getName())));
             }
         }
     }
@@ -226,11 +255,14 @@ public class MainClass extends PluginBase {
     public static class LotteryBoxRsNPCVariable extends BaseVariableV2 {
         @Override
         public void onUpdate(Player player, RsNpcConfig rsNpcConfig) {
+            if (player == null) {
+                return;
+            }
             for (String ticket : registered_tickets) {
-                this.addVariable("{lotterybox_tickets_" + ticket + "}", String.valueOf(BasicTool.getTicketCounts(player.getName(), ticket)));
+                this.addVariable("{lotterybox_tickets_" + ticket + "}", String.valueOf(LotteryBoxAPI.getTicketCounts(player.getName(), ticket)));
             }
             for (LotteryBox box : lotteryBoxList) {
-                this.addVariable("{lotterybox_playtimes_" + box.getName() + "}", String.valueOf(BasicTool.getLotteryPlayTimes(player.getName(), box.getName())));
+                this.addVariable("{lotterybox_playtimes_" + box.getName() + "}", String.valueOf(LotteryBoxAPI.getLotteryPlayTimes(player.getName(), box.getName())));
             }
         }
     }
