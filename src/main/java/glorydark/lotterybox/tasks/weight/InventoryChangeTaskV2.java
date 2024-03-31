@@ -183,7 +183,7 @@ public class InventoryChangeTaskV2 extends Task implements Runnable {
                             Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), s.replace("%player%", player.getName()));
                         }
                         if (prize.isBroadcast()) {
-                            Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
+                            Server.getInstance().broadcastMessage(LotteryBoxMain.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
                         }
                         LotteryBoxMain.log.info("玩家 {" + player.getName() + "} 在抽奖箱 {" + lotteryBox.getName() + "} 中抽到物品 {" + prize.getName() + "}!");
                     } else {
@@ -217,7 +217,7 @@ public class InventoryChangeTaskV2 extends Task implements Runnable {
                         saveCommand(s);
                     }
                     if (prize.isBroadcast()) {
-                        Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
+                        Server.getInstance().broadcastMessage(LotteryBoxMain.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), prize.getName()));
                     }
                 }
                 saveItem(inventory.values().toArray(new Item[0]));

@@ -2,7 +2,7 @@ package glorydark.lotterybox.config;
 
 import cn.nukkit.Server;
 import cn.nukkit.utils.Config;
-import glorydark.lotterybox.MainClass;
+import glorydark.lotterybox.LotteryBoxMain;
 
 import java.io.File;
 
@@ -15,7 +15,7 @@ public class McrmbConfig {
         website = cfg.getString("website", "");
         sid = cfg.getString("sid", "");
         key = cfg.getString("key", "");
-        MainClass.getInstance().getLogger().info("mcrmb地址："+website);
+        LotteryBoxMain.getInstance().getLogger().info("mcrmb地址："+website);
     }
 
 }

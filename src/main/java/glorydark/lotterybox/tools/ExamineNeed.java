@@ -2,7 +2,7 @@ package glorydark.lotterybox.tools;
 
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
-import glorydark.lotterybox.MainClass;
+import glorydark.lotterybox.LotteryBoxMain;
 import glorydark.lotterybox.adapter.CodeException;
 import glorydark.lotterybox.adapter.Econ;
 import glorydark.lotterybox.adapter.PointCoupon;
@@ -37,7 +37,7 @@ public class ExamineNeed {
             }
             Item item = Utils.parseItemString(needArray[i], player.getLanguageCode());
             if (item == null) {
-                MainClass.getInstance().getLogger().warning("配置文件中需求有误: " + String.join("||", needArray));
+                LotteryBoxMain.getInstance().getLogger().warning("配置文件中需求有误: " + String.join("||", needArray));
                 return false;
             }
             if (player.getInventory().contains(item)) {
@@ -47,20 +47,20 @@ public class ExamineNeed {
             }
         }
         if (!itemNeedList.isEmpty()) {
-            player.sendMessage(MainClass.getI18n().tr(player.getLanguageCode(), "lotterybox.need_failed_msg", String.join("、", itemNeedList)));
+            player.sendMessage(LotteryBoxMain.getI18n().tr(player.getLanguageCode(), "lotterybox.need_failed_msg", String.join("、", itemNeedList)));
             return false;
         }
         Econ EconAPI = new Econ(player);
         if (needMoney > 0) {
             if (EconAPI.getMoney() < needMoney) {
-                player.sendMessage(MainClass.getI18n().tr(player.getLanguageCode(), "lotterybox.need_failed_msg", "Money *" + (needMoney - EconAPI.getMoney())));
+                player.sendMessage(LotteryBoxMain.getI18n().tr(player.getLanguageCode(), "lotterybox.need_failed_msg", "Money *" + (needMoney - EconAPI.getMoney())));
                 return false;
             }
             EconAPI.reduceMoney(needMoney);
         }
         if (needPoint > 0) {
             if (!Point.reducePoint(player, needPoint)) {
-                player.sendMessage(MainClass.getI18n().tr(player.getLanguageCode(), "lotterybox.cannot.point", McrmbConfig.website).replace("{n}", "\n"));
+                player.sendMessage(LotteryBoxMain.getI18n().tr(player.getLanguageCode(), "lotterybox.cannot.point", McrmbConfig.website).replace("{n}", "\n"));
                 return false;
             }
         } else if (needRMB > 0) {
@@ -73,7 +73,7 @@ public class ExamineNeed {
             }
 
             if (!isPay) {
-                player.sendMessage(MainClass.getI18n().tr(player.getLanguageCode(), "lotterybox.cannot.point", McrmbConfig.website).replace("{n}", "\n"));
+                player.sendMessage(LotteryBoxMain.getI18n().tr(player.getLanguageCode(), "lotterybox.cannot.point", McrmbConfig.website).replace("{n}", "\n"));
                 return false;
             }
         }
@@ -101,7 +101,7 @@ public class ExamineNeed {
             }
             Item item = Utils.parseItemString(needArray[i]);
             if (item == null) {
-                MainClass.getInstance().getLogger().warning("配置文件中需求有误: " + String.join("||", needArray));
+                LotteryBoxMain.getInstance().getLogger().warning("配置文件中需求有误: " + String.join("||", needArray));
                 return "";
             }
             needList.add((item.getCustomName() != null ? item.getCustomName() : item.getName()) + " §r*" + item.getCount());

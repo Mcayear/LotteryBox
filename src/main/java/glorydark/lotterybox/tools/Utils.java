@@ -12,7 +12,7 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.item.Item;
 import cn.nukkit.lang.LangCode;
-import glorydark.lotterybox.MainClass;
+import glorydark.lotterybox.LotteryBoxMain;
 
 import java.time.Instant;
 import java.util.LinkedHashMap;
@@ -31,7 +31,7 @@ public class Utils {
         String[] arr = str.split("@");
         if (arr[0].equals("mi")) {// mi@1 代金券
             if (Server.getInstance().getPluginManager().getPlugin("MagicItem") == null) {
-                MainClass.getInstance().getLogger().warning("你没有使用 MagicItem 插件却在试图获取它的物品：" + str);
+                LotteryBoxMain.getInstance().getLogger().warning("你没有使用 MagicItem 插件却在试图获取它的物品：" + str);
                 return Item.AIR_ITEM;
             }
             LinkedHashMap<String, ItemBean> items = MagicItem.getItemsMap();
@@ -49,7 +49,7 @@ public class Utils {
                 item.setCompoundTag(Tools.hexStringToBytes(otherItemArr[3]));
                 return item;
             } else {
-                MainClass.getInstance().getLogger().warning("MagicItem物品不存在：" + args[1]);
+                LotteryBoxMain.getInstance().getLogger().warning("MagicItem物品不存在：" + args[1]);
             }
         } else if (arr[0].equals("item")) {
             String[] args = arr[1].split(" ");
@@ -63,7 +63,7 @@ public class Utils {
             return item;
         } else if (arr[0].equals("nweapon") || arr[0].equals("rcrpg")) {
             if (Server.getInstance().getPluginManager().getPlugin("RcRPG") == null) {
-                MainClass.getInstance().getLogger().warning("你没有使用 RcRPG 插件却在试图获取它的物品：" + str);
+                LotteryBoxMain.getInstance().getLogger().warning("你没有使用 RcRPG 插件却在试图获取它的物品：" + str);
                 return Item.AIR_ITEM;
             }
             String[] args = arr[1].split(" ");//Main.loadWeapon
@@ -104,7 +104,7 @@ public class Utils {
             return Item.AIR_ITEM;
             //return nWeapon.onlyNameGetItem(args[0], args[1], args[2], null);
         } else {
-            MainClass.getInstance().getLogger().warning("物品配置有误：" + str);
+            LotteryBoxMain.getInstance().getLogger().warning("物品配置有误：" + str);
         }
         return Item.AIR_ITEM;
     }
@@ -129,7 +129,7 @@ public class Utils {
         if (player.getInventory().canAddItem(item)) {
             player.getInventory().addItem(item);
         } else {
-            player.sendPopup(MainClass.getI18n().tr(player.getLanguageCode(), "MainClass.item.item_drop_tips", item.getName()));
+            player.sendPopup(LotteryBoxMain.getI18n().tr(player.getLanguageCode(), "LotteryBoxMain.item.item_drop_tips", item.getName()));
             player.getLevel().dropItem(player, item);
         }
     }

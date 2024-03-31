@@ -61,9 +61,9 @@ public class FormFactory {
     public static void showLotteryPossibilityWindow(Player player, LotteryBox box) {
         FormWindowSimple simple = new FormWindowSimple(LotteryBoxMain.lang.getTranslation("ShowPossibilityWindow", "Title", box.getName()), "");
         StringBuilder builder = new StringBuilder();
-        builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle", BasicTool.getLotteryPlayTimes(player.getName(), box.getName()))).append("\n").append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle_1", box.getName())).append("\n");
+        builder.append(LotteryBoxMain.lang.getTranslation("ShowPossibilityWindow", "Subtitle", LotteryBoxAPI.getLotteryPlayTimes(player.getName(), box.getName()))).append("\n").append(LotteryBoxMain.lang.getTranslation("ShowPossibilityWindow", "Subtitle_1", box.getName())).append("\n");
         builder.append(ExamineNeed.stringNeed(box.getNeeds().toArray(String[]::new)));
-        builder.append(MainClass.lang.getTranslation("ShowPossibilityWindow", "Subtitle_2", box.getName())).append("\n");
+        builder.append(LotteryBoxMain.lang.getTranslation("ShowPossibilityWindow", "Subtitle_2", box.getName())).append("\n");
         DecimalFormat format = new DecimalFormat("0.00%");
         if (box.isWeightEnabled()) {
             int maxWeight = 0;

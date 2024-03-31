@@ -132,7 +132,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
                         Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), s.replace("%player%", player.getName()));
                     }
                     if (prize.isBroadcast()) {
-                        Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast").replaceFirst("%s", player.getName()).replaceFirst("%s1", prize.getName()));
+                        Server.getInstance().broadcastMessage(LotteryBoxMain.lang.getTranslation("Tips", "PrizeBroadcast").replaceFirst("%s", player.getName()).replaceFirst("%s1", prize.getName()));
                     }
                     LotteryBoxMain.log.info("玩家 {" + player.getName() + "} 在抽奖箱 {" + lotteryBox.getName() + "} 中抽到物品 {" + prize.getName() + "}!");
                 } else {
@@ -174,7 +174,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
                         saveCommand(s);
                     }
                     if (prize.isBroadcast()) {
-                        Server.getInstance().broadcastMessage(MainClass.lang.getTranslation("Tips", "PrizeBroadcast").replaceFirst("%s", player.getName()).replaceFirst("%s1", prize.getName()));
+                        Server.getInstance().broadcastMessage(LotteryBoxMain.lang.getTranslation("Tips", "PrizeBroadcast").replaceFirst("%s", player.getName()).replaceFirst("%s1", prize.getName()));
                     }
                     LotteryBoxMain.log.info("玩家 {" + player.getName() + "} 在抽奖箱 {" + lotteryBox.getName() + "} 中抽到物品 {" + prize.getName() + "}!");
                 } else {

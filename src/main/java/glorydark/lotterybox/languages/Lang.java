@@ -1,7 +1,7 @@
 package glorydark.lotterybox.languages;
 
 import cn.nukkit.utils.Config;
-import glorydark.lotterybox.MainClass;
+import glorydark.lotterybox.LotteryBoxMain;
 
 import java.io.File;
 import java.util.HashMap;
@@ -11,7 +11,7 @@ public class Lang {
     private Map<String, Object> map = new HashMap<>();
 
     public Lang(File file) {
-        MainClass.getInstance().getLogger().info(file.toString());
+        LotteryBoxMain.getInstance().getLogger().info(file.toString());
         if (file.exists()) {
             Config config = new Config(file, Config.YAML);
             map = config.getAll();
