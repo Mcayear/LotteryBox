@@ -12,6 +12,7 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.item.Item;
 import cn.nukkit.lang.LangCode;
+import cn.vusv.qiankunbag.config.QiankunStoneConfig;
 import glorydark.lotterybox.LotteryBoxMain;
 
 import java.time.Instant;
@@ -102,7 +103,9 @@ public class Utils {
                 }
             }
             return Item.AIR_ITEM;
-            //return nWeapon.onlyNameGetItem(args[0], args[1], args[2], null);
+        } else if (arr[0].equals("qiankun")) {
+            String[] args = arr[1].split(" ");
+            return QiankunStoneConfig.getItem(args[0], args.length > 1 ? Integer.parseInt(args[1]) : 1);
         } else {
             LotteryBoxMain.getInstance().getLogger().warning("物品配置有误：" + str);
         }

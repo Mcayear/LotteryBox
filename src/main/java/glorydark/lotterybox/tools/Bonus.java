@@ -8,9 +8,9 @@ public class Bonus {
     private final String name;
     private final Item[] items;
     private final List<String> consolecommands;
-    private final Integer needTimes;
+    private final int needTimes;
 
-    public Bonus(String prizeName, Item[] items, List<String> consolecommands, Integer needTimes) {
+    public Bonus(String prizeName, Item[] items, List<String> consolecommands, int needTimes) {
         this.name = prizeName;
         this.items = items;
         this.consolecommands = consolecommands;
@@ -21,7 +21,7 @@ public class Bonus {
         return name;
     }
 
-    public Integer getNeedTimes() {
+    public int getNeedTimes() {
         return needTimes;
     }
 

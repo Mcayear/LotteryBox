@@ -15,9 +15,12 @@ import java.util.List;
 
 public class ExamineNeed {
     public static boolean examineNeed(String[] needArray, Player player) {
-        return examineNeed(needArray, player, "LotteryBox");
+        return examineNeed(needArray, player, 1);
     }
-    public static boolean examineNeed(String[] needArray, Player player, String reason) {
+    public static boolean examineNeed(String[] needArray, Player player, int spins) {
+        return examineNeed(needArray, player, spins, "LotteryBox");
+    }
+    public static boolean examineNeed(String[] needArray, Player player, int spins, String reason) {
         List<String> itemNeedList = new ArrayList<>();
         List<Item> itemList = new ArrayList<>();
         int needMoney = 0;
@@ -52,6 +55,7 @@ public class ExamineNeed {
         }
         Econ EconAPI = new Econ(player);
         if (needMoney > 0) {
+            needMoney *= spins;
             if (EconAPI.getMoney() < needMoney) {
                 player.sendMessage(LotteryBoxMain.getI18n().tr(player.getLanguageCode(), "lotterybox.need_failed_msg", "Money *" + (needMoney - EconAPI.getMoney())));
                 return false;
@@ -59,11 +63,13 @@ public class ExamineNeed {
             EconAPI.reduceMoney(needMoney);
         }
         if (needPoint > 0) {
+            needPoint *= spins;
             if (!Point.reducePoint(player, needPoint)) {
                 player.sendMessage(LotteryBoxMain.getI18n().tr(player.getLanguageCode(), "lotterybox.cannot.point", McrmbConfig.website).replace("{n}", "\n"));
                 return false;
             }
         } else if (needRMB > 0) {
+            needRMB *= spins;
             boolean isPay;
             try {
                 isPay = PointCoupon.toPay(player.getName().replace(" ", "_"), needRMB, reason);

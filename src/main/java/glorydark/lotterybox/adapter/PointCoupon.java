@@ -24,7 +24,7 @@ public class PointCoupon {
     private static final String MCRMBURL = "http://api.mcrmb.com/Api/{api}?{value}";
 
     public static boolean toPay(String playerName, int money) throws CodeException {
-        return toPay(playerName, money, "兑换PlayerPoint点券");
+        return toPay(playerName, money, "抽奖");
     }
     public static boolean toPay(String playerName, int money, String reason) throws CodeException {
         Player player = Server.getInstance().getPlayer(playerName);
@@ -32,17 +32,18 @@ public class PointCoupon {
                 new GetValue("use", URLEncoder.encode(reason, StandardCharsets.UTF_8)),
                 new GetValue("money", money + ""),
                 new GetValue("time", String.valueOf(System.currentTimeMillis() / 1000L))));
-        if (section.size() == 0) {
+        if (section.isEmpty()) {
             return false;
         }
 
-        Map map = section.getMapList("data").get(0);
         if (Integer.parseInt(section.getString("code")) == 101) {
+            Map map = section.getMapList("data").get(0);
             if (player != null) {
                 player.sendMessage("§a" + section.getString("msg") + " 剩余: " + map.get("money").toString());
             }
             return true;
         } else if (Integer.parseInt(section.getString("code")) == 102) {
+            Map map = section.getMapList("data").get(0);
             if (player != null) {
                 player.sendMessage("§c" + section.getString("msg") +
                         " 还差 " + map.get("need").toString() +
@@ -53,7 +54,6 @@ public class PointCoupon {
         }
         return false;
     }
-
     /**
      * 获取玩家充值的rmb
      */

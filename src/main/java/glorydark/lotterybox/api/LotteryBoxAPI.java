@@ -10,35 +10,35 @@ import java.util.List;
 
 public class LotteryBoxAPI {
 
-    public static Boolean checkTicketCounts(String player, String ticket, Integer counts) {
+    public static Boolean checkTicketCounts(String player, String ticket, int counts) {
         return new Config(LotteryBoxMain.path + "/tickets/" + player + ".yml", Config.YAML).getInt(ticket, 0) >= counts;
     }
 
-    public static Integer getTicketCounts(String player, String ticket) {
+    public static int getTicketCounts(String player, String ticket) {
         return new Config(LotteryBoxMain.path + "/tickets/" + player + ".yml", Config.YAML).getInt(ticket, 0);
     }
 
-    public static void setTicketCounts(String player, String ticket, Integer amount) {
+    public static void setTicketCounts(String player, String ticket, int amount) {
         Config config = new Config(LotteryBoxMain.path + "/tickets/" + player + ".yml", Config.YAML);
         config.set(ticket, amount);
         config.save();
     }
 
-    public static void changeTicketCounts(String player, String ticket, Integer delta) {
+    public static void changeTicketCounts(String player, String ticket, int delta) {
         setTicketCounts(player, ticket, getTicketCounts(player, ticket) + delta);
     }
 
-    public static Integer getLotteryPlayTimes(String player, String lotteryName) {
+    public static int getLotteryPlayTimes(String player, String lotteryName) {
         return new Config(LotteryBoxMain.path + "/lotteryrecords/" + player + ".yml", Config.YAML).getInt(lotteryName, 0);
     }
 
-    public static void setLotteryPlayTimes(String player, String lotteryName, Integer amount) {
+    public static void setLotteryPlayTimes(String player, String lotteryName, int amount) {
         Config config = new Config(LotteryBoxMain.path + "/lotteryrecords/" + player + ".yml", Config.YAML);
         config.set(lotteryName, amount);
         config.save();
     }
 
-    public static void changeLotteryPlayTimes(String player, String lotteryName, Integer delta) {
+    public static void changeLotteryPlayTimes(String player, String lotteryName, int delta) {
         setLotteryPlayTimes(player, lotteryName, getLotteryPlayTimes(player, lotteryName) + delta);
     }
 
@@ -57,7 +57,7 @@ public class LotteryBoxAPI {
         return true;
     }
 
-    public static boolean checkItemExists(Player player, Item needItem, Integer spins) {
+    public static boolean checkItemExists(Player player, Item needItem, int spins) {
         int counts = 0;
         for (Item hasItem : player.getInventory().getContents().values()) {
             if (hasItem.equals(needItem, false)) {

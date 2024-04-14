@@ -50,20 +50,20 @@ descriptions: # 介绍
 prizes: 
 # 抽奖箱为箱子界面抽奖时，最多可存22个
   test1:
-    displayitem: 1:0:1:null # 展示物品，格式为: id:meta:count:nbt(默认为null)
+    displayitem: item@minecraft:stone 0 1 # 展示物品，格式为: item@id meta count
     possibility: 5000 # 默认为概率，可通过weightEnabled变为权重
     description: '233' # 介绍
     broadcast: true # 是否全服播报
-    items: ## 奖品，格式为: id:meta:count:nbt(默认为null)
-      - 1:0:1:null
+    items: ## 奖品，格式为: item@id meta count
+      - item@minecraft:stone 0 1
     showoriginname: true # 是否显示原物品名
     consolecommands: [] # 控制台执行指令，变量为%player%
     rarity: 平凡 # 品质，在rarity.yml进行注册
 bonuses: # 累抽奖励
   test1:
     times: 1 # 次数
-    items: ## 奖品，格式为: id:meta:count:nbt(默认为null)
-      - 1:0:1:null
+    items: ## 奖品，格式为: item@id meta count
+      - item@minecraft:stone 0 1
     consolecommands: # 控制台执行指令，变量为%player%
       - say test
       - give %player% 1 1

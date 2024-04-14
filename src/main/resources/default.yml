@@ -1,4 +1,5 @@
-needs: []
+needs:
+  - rmb@100
 displayName: 测试抽奖箱
 permanentLimit: 3000
 spawnFirework: true
@@ -11,72 +12,71 @@ descriptions:
   - '[ 466 ] * 1天'
 prizes:
   test1:
-    displayitem: 1:0:1:null
+    displayitem: item@minecraft:stone 0 1
     possibility: 5000
     description: '233'
     broadcast: true
     items:
-      - 1:0:1:null
+      - item@minecraft:stone 0 1
     showoriginname: true
     consolecommands: []
     rarity: 平凡
   test2:
-    displayitem: 2:0:1:null
+    displayitem: item@minecraft:grass 0 1
     possibility: 20
     description: 没有奖励
     broadcast: true
     items:
-      - 1:0:1:null
+      - item@minecraft:stone 0 1
     showoriginname: true
     consolecommands: []
     rarity: 稀有
   test3:
-    displayitem: 3:0:1:null
+    displayitem: item@minecraft:dirt 0 1
     possibility: 20
     description: 没有奖励
     broadcast: true
     items:
-      - 1:0:1:null
+      - item@minecraft:stone 0 1
     showoriginname: true
     consolecommands: []
     rarity: 罕见
   test4:
-    displayitem: 4:0:1:null
+    displayitem: item@minecraft:cobblestone 0 1
     possibility: 20
     description: 没有奖励
     broadcast: true
     items:
-      - 1:0:1:null
+      - item@minecraft:stone 0 1
     showoriginname: true
     consolecommands: []
     rarity: default
   test5:
-    displayitem: 5:0:1:null
+    displayitem: item@minecraft:planks 0 1
     possibility: 20
     description: 没有奖励
     broadcast: true
     items:
-      - 1:0:1:null
+      - item@minecraft:stone 0 1
     showoriginname: true
     consolecommands: []
     rarity: 精良
   test6:
-    displayitem: 6:0:1:null
+    displayitem: item@minecraft:sapling 0 1
     possibility: 20
     description: 没有奖励
     broadcast: true
     items:
-      - 1:0:1:null
+      - item@minecraft:stone 0 1
     showoriginname: true
     consolecommands: []
     rarity: 传说
   test7:
-    displayitem: 7:0:1:null
-    possibility: 20
+    displayitem: item@minecraft:bedrock 0 1
     description: 没有奖励
     broadcast: true
     items:
-      - 1:0:1:null
+      - item@minecraft:stone 0 1
     showoriginname: true
     consolecommands: []
     rarity: 史诗
@@ -85,7 +85,7 @@ bonuses:
     times: 1
     prize: test1
     items:
-      - 1:0:1:null
+      - item@minecraft:stone 0 1
     consolecommands:
       - say test
       - give %player% 1 1

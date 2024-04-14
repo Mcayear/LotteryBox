@@ -25,7 +25,7 @@ public class LotteryBox {
 
     private final String displayName;
 
-    private final Integer limit;
+    private final int limit;
 
     private final boolean spawnFirework;
 
@@ -35,7 +35,8 @@ public class LotteryBox {
 
     private final boolean weightEnabled;
 
-    public LotteryBox(String name, String displayName, List<String> needs, List<String> description, List<Prize> prizes, List<Bonus> bonuses, Integer limit, boolean spawnFirework, String endParticle, String sound, boolean weightEnabled) {
+    public LotteryBox(String name, String displayName, List<String> needs, List<String> description, List<Prize> prizes, List<Bonus> bonuses, int limit, boolean spawnFirework, String endParticle, String sound, boolean weightEnabled) {
+        LotteryBoxMain.getInstance().getLogger().info("加载："+name);
         this.name = name;
         this.needs = needs;
         this.description = description;
@@ -62,7 +63,7 @@ public class LotteryBox {
         }
     }
 
-    public boolean checkLimit(String player, Integer spins) {
+    public boolean checkLimit(String player, int spins) {
         return LotteryBoxAPI.getLotteryPlayTimes(player, name) + spins <= limit;
     }
 
@@ -72,11 +73,11 @@ public class LotteryBox {
      * @param spins 数量
      * @return
      */
-    public boolean deductNeeds(Player player, Integer spins) {
-        return ExamineNeed.examineNeed(needs.toArray(String[]::new), player);
+    public boolean deductNeeds(Player player, int spins) {
+        return ExamineNeed.examineNeed(needs.toArray(String[]::new), player, spins);
     }
 
-    public Bonus getBonus(Integer integer) {
+    public Bonus getBonus(int integer) {
         for (Bonus key : bonuses) {
             if (Objects.equals(key.getNeedTimes(), integer)) {
                 return key;

@@ -100,11 +100,10 @@ public class LotteryBoxMain extends PluginBase {
                     Map<String, Object> subMap = (Map<String, Object>) prizesMap.get(key);
                     List<Item> items = new ArrayList<>();
                     for (String itemString : (List<String>) subMap.get("items")) {
-                        items.add(Inventory.getItem(itemString));
-                        //items.add(Utils.parseItemString(itemString));
+                        items.add(Utils.parseItemString(itemString));
                     }
                     Prize prize;
-                    prize = new Prize(key, (String) subMap.getOrDefault("description", ""), Inventory.getItem((String) subMap.getOrDefault("displayitem", "1:0:1:null")), (Boolean) subMap.getOrDefault("broadcast", true), items.toArray(new Item[0]), (List<String>) subMap.getOrDefault("consolecommands", new ArrayList<>()), (Integer) subMap.getOrDefault("possibility", 5), (Boolean) subMap.getOrDefault("showoriginname", false), (String) subMap.getOrDefault("rarity", "default"));
+                    prize = new Prize(key, (String) subMap.getOrDefault("description", ""), Utils.parseItemString((String) subMap.getOrDefault("displayitem", "item@minecraft:stone 0 1")), (Boolean) subMap.getOrDefault("broadcast", true), items.toArray(new Item[0]), (List<String>) subMap.getOrDefault("consolecommands", new ArrayList<>()), (Integer) subMap.getOrDefault("possibility", 5), (Boolean) subMap.getOrDefault("showoriginname", false), (String) subMap.getOrDefault("rarity", "default"));
                     prizes.add(prize);
                 }
 
@@ -114,7 +113,7 @@ public class LotteryBoxMain extends PluginBase {
                     Map<String, Object> subMap = (Map<String, Object>) bonusesMap.get(key);
                     List<Item> items = new ArrayList<>();
                     for (String itemString : (List<String>) subMap.get("items")) {
-                        items.add(Inventory.getItem(itemString));
+                        items.add(Utils.parseItemString(itemString));
                     }
                     bonuses.add(new Bonus(key, items.toArray(new Item[0]), (List<String>) subMap.get("consolecommands"), (Integer) subMap.get("times")));
                 }

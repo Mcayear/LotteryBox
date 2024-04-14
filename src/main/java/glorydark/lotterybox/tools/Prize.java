@@ -16,15 +16,17 @@ public class Prize {
     private boolean broadcast;
     private Item[] items;
     private List<String> consolecommands;
-    private Integer possibility;
+    private int possibility;
 
     private boolean showOriginName;
 
     private String rarity;
 
-    public Prize(String name, String description, Item displayItem, boolean broadcast, Item[] items, List<String> consolecommands, Integer possibility, boolean showOriginName, String rarity) {
+    public Prize(String name, String description, Item displayItem, boolean broadcast, Item[] items, List<String> consolecommands, int possibility, boolean showOriginName, String rarity) {
         this.name = name;
-        this.description = description;
+        this.description = description
+                .replace("{item.name}", displayItem.getCustomName() != null ? displayItem.getCustomName() : displayItem.getName())
+                .replace("{item.lore}", String.join("\n", displayItem.getLore()));
         this.displayitem = displayItem;
         this.broadcast = broadcast;
         this.items = items;

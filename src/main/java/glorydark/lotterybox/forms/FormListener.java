@@ -87,7 +87,7 @@ public class FormListener implements Listener {
             return;
         }
         if (formType == FormType.SelectLotterySpin) {
-            int spin = (int) custom.getResponse().getSliderResponse(1);
+            int spin = (int) custom.getResponse().getSliderResponse(1);// 当次，抽奖次数
             LotteryBox box = LotteryBoxMain.playerLotteryBoxes.get(player);
             if (box.checkLimit(player.getName(), spin)) {
                 if (box.deductNeeds(player, spin)) {

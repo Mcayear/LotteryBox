@@ -26,11 +26,11 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
     private final List<Integer> allowIndex;
     private final int maxSpin;
     private Map<Integer, Item> inventory;
-    private Integer index = 0;
+    private int index = 0;
     private int ticks;
     private int spin = 1;
 
-    public LotteryBoxChangeTask(EntityMinecartChest chest, Player player, LotteryBox box, Integer spins) {
+    public LotteryBoxChangeTask(EntityMinecartChest chest, Player player, LotteryBox box, int spins) {
         this.chest = chest;
         this.inventory = this.chest.getInventory().getContents();
         this.player = player;
@@ -56,7 +56,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
         this.maxSpin = spins;
     }
 
-    public Integer getMaxIndex() {
+    public int getMaxIndex() {
         Random random = new Random();
         for (Prize prize : lotteryBox.getPrizes()) {
             List<Integer> integers = new ArrayList<>();
@@ -82,7 +82,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
     public void onRun(int i) {
         ticks += 1;
         if (player.isOnline() && !chest.closed && chest.getInventory().getViewers().contains(player) && !LotteryBoxMain.banWorlds.contains(player.getLevel().getName()) && LotteryBoxMain.isWorldAvailable(player.getLevel().getName())) {
-            Integer thisMaxIndex = maxIndex.get(spin - 1);
+            int thisMaxIndex = maxIndex.get(spin - 1);
             if (index <= thisMaxIndex) {
                 if (thisMaxIndex > 10) {
                     if (index < 2 || index + 2 >= thisMaxIndex) {
@@ -97,7 +97,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
                         }
                     }
                 }
-                Integer realIndex = allowIndex.get(index % 22);
+                int realIndex = allowIndex.get(index % 22);
                 chest.getInventory().setContents(inventory);
                 Item item = chest.getInventory().getItem(realIndex);
                 item.addEnchantment(new EnchantmentProtectionAll());
@@ -111,7 +111,7 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
                 Item item = inventory.get(allowIndex.get(thisMaxIndex % 22));
                 Item[] give;
                 List<Prize> prizes = lotteryBox.getPrizes();
-                Integer realIndex = allowIndex.get(thisMaxIndex % 22);
+                int realIndex = allowIndex.get(thisMaxIndex % 22);
                 Prize prize = null;
                 if (realIndex < prizes.size()) {
                     give = prizes.get(realIndex).getItems();
@@ -158,9 +158,9 @@ public class LotteryBoxChangeTask extends Task implements Runnable {
             for (int t = 1; t < spin; t++) {
                 maxIndex.remove(0);
             }
-            for (Integer thisMaxIndex : maxIndex) {
+            for (int thisMaxIndex : maxIndex) {
                 List<Prize> prizes = lotteryBox.getPrizes();
-                Integer realIndex = allowIndex.get(thisMaxIndex % 22);
+                int realIndex = allowIndex.get(thisMaxIndex % 22);
                 if (realIndex < prizes.size()) {
                     Prize prize = prizes.get(realIndex);
                     if (player.isOnline()) {

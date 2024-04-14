@@ -28,10 +28,10 @@ public class InventoryChangeTask extends Task implements Runnable {
     private final LotteryBox lotteryBox;
     private final int maxSpin;
     private final int maxCounts;
-    private Integer index = 0;
+    private int index = 0;
     private int ticks;
 
-    public InventoryChangeTask(Player player, LotteryBox box, Integer spins) {
+    public InventoryChangeTask(Player player, LotteryBox box, int spins) {
         this.player = player;
         this.lotteryBox = box;
         this.maxSpin = spins;
@@ -65,7 +65,7 @@ public class InventoryChangeTask extends Task implements Runnable {
         LotteryBoxMain.playingPlayers.add(player);
     }
 
-    public Integer getObtained() {
+    public int getObtained() {
         Random random = new Random();
         for (Prize prize : lotteryBox.getPrizes()) {
             List<Integer> integers = new ArrayList<>();
@@ -87,7 +87,7 @@ public class InventoryChangeTask extends Task implements Runnable {
         }
     }
 
-    public Item getDisplayItem(Integer index, boolean isEnchanted) {
+    public Item getDisplayItem(int index, boolean isEnchanted) {
         index += maxCounts;
         if (index == (index / 2) * 2) {
             Prize prize = lotteryBox.getPrizes().get((index % maxCounts) / 2);
@@ -112,7 +112,7 @@ public class InventoryChangeTask extends Task implements Runnable {
     @Override
     public void onRun(int i) {
         if (player.isOnline() && !LotteryBoxMain.banWorlds.contains(player.getLevel().getName()) && LotteryBoxMain.isWorldAvailable(player.getLevel().getName()) && LotteryBoxMain.playingPlayers.contains(player)) {
-            Integer thisMaxIndex = maxIndex.get(0);
+            int thisMaxIndex = maxIndex.get(0);
             ticks += 1;
             if (maxCounts > 10) {
                 if (index < 4) {
@@ -210,7 +210,7 @@ public class InventoryChangeTask extends Task implements Runnable {
                 this.cancel();
             }
         } else {
-            for (Integer index : maxIndex) {
+            for (int index : maxIndex) {
                 Prize prize = getPrize(index);
                 if (prize != null) {
                     if (player.isOnline() && LotteryBoxMain.playingPlayers.contains(player)) {
