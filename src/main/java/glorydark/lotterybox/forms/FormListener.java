@@ -86,24 +86,50 @@ public class FormListener implements Listener {
         if (custom.getResponse() == null) {
             return;
         }
-        if (formType == FormType.SelectLotterySpin) {
-            int spin = (int) custom.getResponse().getSliderResponse(1);// 当次，抽奖次数
-            LotteryBox box = LotteryBoxMain.playerLotteryBoxes.get(player);
-            if (box.checkLimit(player.getName(), spin)) {
-                if (box.deductNeeds(player, spin)) {
-                    if (box.isWeightEnabled()) {
-                        Server.getInstance().getScheduler().scheduleRepeatingTask(new InventoryChangeTaskV2(player, LotteryBoxMain.playerLotteryBoxes.get(player), spin), LotteryBoxMain.default_speed_ticks);
-                    } else {
-                        Server.getInstance().getScheduler().scheduleRepeatingTask(new InventoryChangeTask(player, LotteryBoxMain.playerLotteryBoxes.get(player), spin), LotteryBoxMain.default_speed_ticks);
-                    }
-                } else {
-                    Server.getInstance().getPluginManager().callEvent(new LotteryForceCloseEvent(player));
-                }
-            } else {
-                player.sendMessage(LotteryBoxMain.lang.getTranslation("Tips", "TimesLimit"));
+        switch (formType) {
+            case SelectLotterySpin -> {
+                int spin = (int) custom.getResponse().getSliderResponse(1);// 当次，抽奖次数
+                startLottery(player, spin);
+            }
+            default -> {}
+        }
+
+    }
+
+    /**
+     * 开始抽奖
+     * @param player 玩家对象
+     * @param spin 抽奖次数
+     * @param ignoreNeed 是否忽略需求
+     */
+    public static void startLottery(Player player, int spin, boolean ignoreNeed) {
+        LotteryBox box = LotteryBoxMain.playerLotteryBoxes.get(player);// 通过 playerLotteryBoxes Map 来获取玩家的抽奖箱
+        if (!box.checkLimit(player.getName(), spin)) {
+            player.sendMessage(LotteryBoxMain.lang.getTranslation("Tips", "TimesLimit"));
+            Server.getInstance().getPluginManager().callEvent(new LotteryForceCloseEvent(player));
+            return;
+        }
+
+        if (!ignoreNeed) {
+            if (!box.deductNeeds(player, spin)) {
                 Server.getInstance().getPluginManager().callEvent(new LotteryForceCloseEvent(player));
+                return;
             }
         }
+
+        if (box.isWeightEnabled()) {
+            Server.getInstance().getScheduler().scheduleRepeatingTask(new InventoryChangeTaskV2(player, LotteryBoxMain.playerLotteryBoxes.get(player), spin), LotteryBoxMain.default_speed_ticks);
+        } else {
+            Server.getInstance().getScheduler().scheduleRepeatingTask(new InventoryChangeTask(player, LotteryBoxMain.playerLotteryBoxes.get(player), spin), LotteryBoxMain.default_speed_ticks);
+        }
+    }
+    /**
+     * 开始抽奖
+     * @param player 玩家对象
+     * @param spin 抽奖次数
+     */
+    public static void startLottery(Player player, int spin) {
+        startLottery(player, spin, false);
     }
 
     private void onModalClick(Player player, FormWindowModal response, FormType formType) {

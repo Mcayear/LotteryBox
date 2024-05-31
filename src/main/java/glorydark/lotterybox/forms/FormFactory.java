@@ -80,7 +80,7 @@ public class FormFactory {
         }
         simple.setContent(builder.toString());
         simple.addButton(new ElementButton("立即抽奖"));
-        showFormWindow(player, simple, FormType.LotteryPossibility);
+        showFormWindow(player, simple, FormType.LotteryPossibility);// FormListener#onSimpleClick
     }
 
     public static void showRewardWindow(Player player, String content) {
