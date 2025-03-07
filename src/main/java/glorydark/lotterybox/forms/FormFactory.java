@@ -16,7 +16,10 @@ import cn.nukkit.item.ItemBookEnchanted;
 import cn.nukkit.nbt.tag.ListTag;
 import glorydark.lotterybox.LotteryBoxMain;
 import glorydark.lotterybox.api.LotteryBoxAPI;
-import glorydark.lotterybox.tools.*;
+import glorydark.lotterybox.tools.ExchangeCache;
+import glorydark.lotterybox.tools.Inventory;
+import glorydark.lotterybox.tools.LotteryBox;
+import glorydark.lotterybox.tools.Prize;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -46,15 +49,19 @@ public class FormFactory {
     public static void showSelectLotteryBoxWindow(Player player) {
         FormWindowSimple windowSimple = new FormWindowSimple(LotteryBoxMain.lang.getTranslation("SelectLotteryBoxWindow", "Title"), LotteryBoxMain.lang.getTranslation("SelectLotteryBoxWindow", "Content"));
         for (LotteryBox lotteryBox : LotteryBoxMain.lotteryBoxList) {
-            windowSimple.addButton(new ElementButton(lotteryBox.getDisplayName()));
+            if (lotteryBox.getElementButtonImageData() == null) {
+                windowSimple.addButton(new ElementButton(lotteryBox.getDisplayName()));
+            } else {
+                windowSimple.addButton(new ElementButton(lotteryBox.getDisplayName(), lotteryBox.getElementButtonImageData()));
+            }
         }
         showFormWindow(player, windowSimple, SelectLotteryBox);
     }
 
-    public static void showPESelectSpinWindow(Player player) {
+    public static void showPESelectSpinWindow(Player player, LotteryBox lotteryBox) {
         FormWindowCustom custom = new FormWindowCustom(LotteryBoxMain.lang.getTranslation("SelectSpinsWindow", "Title", LotteryBoxMain.playerLotteryBoxes.get(player).getName()));
         custom.addElement(new ElementLabel(LotteryBoxMain.lang.getTranslation("SelectSpinsWindow", "Content")));
-        custom.addElement(new ElementSlider(LotteryBoxMain.lang.getTranslation("SelectSpinsWindow", "Slider_Text"), 1, 10, 1, 1));
+        custom.addElement(new ElementSlider(LotteryBoxMain.lang.getTranslation("SelectSpinsWindow", "Slider_Text"), 1, lotteryBox.getMaxDrawPerTime() == 0? 30: lotteryBox.getMaxDrawPerTime(), 1, 1));
         showFormWindow(player, custom, SelectLotterySpin);
     }
 

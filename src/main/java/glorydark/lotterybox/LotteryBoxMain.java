@@ -3,6 +3,7 @@ package glorydark.lotterybox;
 import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.entity.item.EntityMinecartChest;
+import cn.nukkit.form.element.ElementButtonImageData;
 import cn.nukkit.item.Item;
 import cn.nukkit.lang.PluginI18n;
 import cn.nukkit.lang.PluginI18nManager;
@@ -103,7 +104,7 @@ public class LotteryBoxMain extends PluginBase {
                         items.add(Utils.parseItemString(itemString));
                     }
                     Prize prize;
-                    prize = new Prize(key, (String) subMap.getOrDefault("description", ""), Utils.parseItemString((String) subMap.getOrDefault("displayitem", "item@minecraft:stone 0 1")), (Boolean) subMap.getOrDefault("broadcast", true), items.toArray(new Item[0]), (List<String>) subMap.getOrDefault("consolecommands", new ArrayList<>()), (Integer) subMap.getOrDefault("possibility", 5), (Boolean) subMap.getOrDefault("showoriginname", false), (String) subMap.getOrDefault("rarity", "default"));
+                    prize = new Prize(key, (String) subMap.getOrDefault("description", ""), Utils.parseItemString((String) subMap.getOrDefault("displayitem", "item@minecraft:stone 0 1")), (Boolean) subMap.getOrDefault("broadcast", true), items.toArray(new Item[0]), (List<String>) subMap.getOrDefault("consolecommands", new ArrayList<>()), (List<String>) subMap.getOrDefault("op_commands", new ArrayList<>()), (Integer) subMap.getOrDefault("possibility", 5), (Boolean) subMap.getOrDefault("showoriginname", false), (String) subMap.getOrDefault("rarity", "default"));
                     prizes.add(prize);
                 }
 
@@ -117,12 +118,28 @@ public class LotteryBoxMain extends PluginBase {
                     }
                     bonuses.add(new Bonus(key, items.toArray(new Item[0]), (List<String>) subMap.get("consolecommands"), (Integer) subMap.get("times")));
                 }
-                LotteryBox lotteryBox = new LotteryBox(file.getName().split("\\.")[0], config.getString("displayName"), config.getStringList("needs"), config.getStringList("descriptions"), prizes, bonuses, config.getInt("permanentLimit"), config.getBoolean("spawnFirework"), config.getString("endParticle"), config.getString("sound", Sound.RANDOM_ORB.getSound()), config.getBoolean("weightEnabled", false));
+                ElementButtonImageData elementButtonImageData = null;
+                if (config.exists("button_image_data")) {
+                    String imageData = config.getString("button_image_data");
+                    if (imageData.startsWith("url#")) {
+                        elementButtonImageData = new ElementButtonImageData("url", imageData.replaceFirst("url#", ""));
+                    } else if (imageData.startsWith("path#")) {
+                        elementButtonImageData = new ElementButtonImageData("path", imageData.replaceFirst("path#", ""));
+                    }
+                }
+                LotteryBox lotteryBox = new LotteryBox(file.getName().split("\\.")[0], config.getInt("priority"), config.getString("displayName"), config.getStringList("needs"), config.getStringList("descriptions"), prizes, bonuses, config.getInt("permanentLimit"), config.getBoolean("spawnFirework"), config.getString("endParticle"), config.getString("sound", Sound.RANDOM_ORB.getSound()), config.getBoolean("weightEnabled", false), config.getInt("max_draw_per_time"), elementButtonImageData);
                 lotteryBoxList.add(lotteryBox);
                 Server.getInstance().getLogger().info(LotteryBoxMain.lang.getTranslation("Tips", "LotteryBoxLoaded", lotteryBox.getName()));
             }
+            LotteryBoxMain.lotteryBoxList.sort(Comparator.comparing(LotteryBox::getPriority).reversed());
             Server.getInstance().getLogger().info(LotteryBoxMain.lang.getTranslation("Tips", "LotteryBoxFinish", lotteryBoxList.size()));
         }
+    }
+
+    public static String getDate(long millis) {
+        Date date = new Date(millis);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+        return format.format(date);
     }
 
     @Override
@@ -137,7 +154,8 @@ public class LotteryBoxMain extends PluginBase {
     public void onEnable() {
         saveDefaultConfig();
         new File(path + "/languages/").mkdirs();
-        new File(path + "/players/").mkdirs();
+        new File(path + "/lottery_records/").mkdirs();
+        new File(path + "/prize_records/").mkdirs();
         new File(path + "/boxes/").mkdirs();
         new File(path + "/tickets/").mkdirs();
         this.saveResource("languages/zh-cn.yml", false);
@@ -209,12 +227,6 @@ public class LotteryBoxMain extends PluginBase {
         McrmbConfig.init();
 
         this.getLogger().info("LotteryBox onEnabled!");
-    }
-
-    public static String getDate(long millis) {
-        Date date = new Date(millis);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
-        return format.format(date);
     }
 
     public void updateConfig() {

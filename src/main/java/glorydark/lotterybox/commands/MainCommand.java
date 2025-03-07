@@ -8,10 +8,10 @@ import cn.nukkit.command.data.CommandParamType;
 import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.Config;
 import glorydark.lotterybox.LotteryBoxMain;
+import glorydark.lotterybox.api.LotteryBoxAPI;
 import glorydark.lotterybox.forms.FormFactory;
 import glorydark.lotterybox.forms.FormListener;
 import glorydark.lotterybox.languages.Lang;
-import glorydark.lotterybox.api.LotteryBoxAPI;
 import glorydark.lotterybox.tools.Inventory;
 import glorydark.lotterybox.tools.LotteryBox;
 
