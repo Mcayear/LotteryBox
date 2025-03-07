@@ -3,6 +3,7 @@ package glorydark.lotterybox.api;
 import cn.nukkit.Player;
 import cn.nukkit.item.Item;
 import cn.nukkit.utils.Config;
+import cn.nukkit.utils.ConfigSection;
 import glorydark.lotterybox.LotteryBoxMain;
 
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.List;
 
 public class LotteryBoxAPI {
 
-    public static Boolean checkTicketCounts(String player, String ticket, int counts) {
+    public static boolean checkTicketCounts(String player, String ticket, int counts) {
         return new Config(LotteryBoxMain.path + "/tickets/" + player + ".yml", Config.YAML).getInt(ticket, 0) >= counts;
     }
 
@@ -29,12 +30,25 @@ public class LotteryBoxAPI {
     }
 
     public static int getLotteryPlayTimes(String player, String lotteryName) {
-        return new Config(LotteryBoxMain.path + "/lotteryrecords/" + player + ".yml", Config.YAML).getInt(lotteryName, 0);
+        return new Config(LotteryBoxMain.path + "/lottery_records/" + player + ".yml", Config.YAML).getInt(lotteryName, 0);
     }
 
     public static void setLotteryPlayTimes(String player, String lotteryName, int amount) {
-        Config config = new Config(LotteryBoxMain.path + "/lotteryrecords/" + player + ".yml", Config.YAML);
+        Config config = new Config(LotteryBoxMain.path + "/lottery_records/" + player + ".yml", Config.YAML);
         config.set(lotteryName, amount);
+        config.save();
+    }
+
+    public static int getLotteryPrizeTimes(String player, String lotteryName, String prize) {
+        return new Config(LotteryBoxMain.path + "/prize_records/" + player + ".yml", Config.YAML).getSection(lotteryName).getInt(prize);
+    }
+
+    public static void changeLotteryPrizeTimes(String player, String lotteryName, String prize) {
+        Config config = new Config(LotteryBoxMain.path + "/prize_records/" + player + ".yml", Config.YAML);
+        if (!config.exists(lotteryName)) {
+            config.set(lotteryName, new ConfigSection());
+        }
+        config.getSection(lotteryName).set(prize, config.getSection(lotteryName).getInt(prize) + 1);
         config.save();
     }
 

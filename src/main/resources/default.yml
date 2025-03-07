@@ -21,6 +21,8 @@ prizes:
     showoriginname: true
     consolecommands: []
     rarity: 平凡
+    max_gained_time: 1
+    op_commands: []
   test2:
     displayitem: item@minecraft:grass 0 1
     possibility: 20

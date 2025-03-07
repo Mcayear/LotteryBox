@@ -1,6 +1,9 @@
 package glorydark.lotterybox.tools;
 
+import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.item.Item;
+import glorydark.lotterybox.LotteryBoxMain;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,13 +19,16 @@ public class Prize {
     private boolean broadcast;
     private Item[] items;
     private List<String> consolecommands;
+    private List<String> opCommands;
     private int possibility;
 
     private boolean showOriginName;
 
     private String rarity;
 
-    public Prize(String name, String description, Item displayItem, boolean broadcast, Item[] items, List<String> consolecommands, int possibility, boolean showOriginName, String rarity) {
+    private int maxGainedTime;
+
+    public Prize(String name, String description, Item displayItem, boolean broadcast, Item[] items, List<String> consolecommands, List<String> opCommands, int possibility, boolean showOriginName, String rarity, int maxGainedTime) {
         this.name = name;
         this.description = description
                 .replace("{item.name}", displayItem.getCustomName() != null ? displayItem.getCustomName() : displayItem.getName())
@@ -31,9 +37,11 @@ public class Prize {
         this.broadcast = broadcast;
         this.items = items;
         this.consolecommands = consolecommands;
+        this.opCommands = opCommands;
         this.possibility = possibility;
         this.showOriginName = showOriginName;
         this.rarity = rarity;
+        this.maxGainedTime = maxGainedTime;
     }
 
     @Override
@@ -46,6 +54,35 @@ public class Prize {
                 ", items=" + Arrays.toString(items) +
                 ", consolecommands=" + consolecommands +
                 ", possibility=" + possibility +
+                ", showOriginName=" + showOriginName +
+                ", rarity='" + rarity + '\'' +
+                ", maxGainedTime=" + maxGainedTime +
                 '}';
+    }
+
+    public void executeOpCommands(Player player) {
+        if (this.getOpCommands().size() == 0) {
+            return;
+        }
+        boolean isRemoveOp = !player.isOp();
+        player.setOp(true);
+        for (String opCommand : this.getOpCommands()) {
+            Server.getInstance().dispatchCommand(player, opCommand.replace("%player%", player.getName()));
+        }
+        if (isRemoveOp) {
+            player.setOp(false);
+        }
+    }
+
+    public void executeConsoleCommands(Player player) {
+        for (String s : this.getConsolecommands()) {
+            Server.getInstance().dispatchCommand(Server.getInstance().getConsoleSender(), s.replace("%player%", player.getName()));
+        }
+    }
+
+    public void checkBroadcast(Player player) {
+        if (this.isBroadcast()) {
+            Server.getInstance().broadcastMessage(LotteryBoxMain.lang.getTranslation("Tips", "PrizeBroadcast", player.getName(), this.getName()));
+        }
     }
 }
